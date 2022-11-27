@@ -31,20 +31,60 @@ class Recipe(models.Model):
 
 
 class Ingredient(models.Model):
-    pass
+    name = models.CharField(
+        verbose_name='Название',
+        max_length=200,
+    )
+    measurement_unit = models.CharField(
+        verbose_name='Единица Измерения'
+    )
 
 
 class IngredientsInRecipe(models.Model):
-    pass
+    recipe = models.ForeignKey(
+        Recipe,
+        verbose_name='Рецепт',
+    )
+    ingredient = models.ForeignKey(
+        Ingredient,
+        verbose_name='Byuhtlbtyn',
+    )
+    amount = models.IntegerField(
+        verbose_name='Количество',
+    )
 
 
-class Tags(models.Model):
-    pass
+class Tag(models.Model):
+    name = models.CharField(
+        verbose_name='Название',
+        max_length=200,
+    )
+    slug = models.SlugField(
+        verbose_name='Ссылка',
+        max_length=200,
+    )
+    color = models.CharField(
+        verbose_name='Цвет',
+    )
 
 
-class UsersFavoriteRecipes(models.Model):
-    pass
+class UserFavoriteRecipes(models.Model):
+    user = models.ForeignKey(
+        User,
+        verbose_name='Пользователь',
+    )
+    recipe = models.ForeignKey(
+        Recipe,
+        verbose_name='Рецепт'
+    )
 
 
 class ShoppingList(models.Model):
-    pass
+    user = models.ForeignKey(
+        User,
+        verbose_name='Пользователь',
+    )
+    recipe = models.ForeignKey(
+        Recipe,
+        verbose_name='Рецепт'
+    )
