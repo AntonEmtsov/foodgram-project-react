@@ -10,7 +10,8 @@ class Ingredient(models.Model):
         max_length=200,
     )
     measurement_unit = models.CharField(
-        verbose_name='Единица Измерения'
+        verbose_name='Единица Измерения',
+        max_length=200,
     )
 
 
@@ -25,6 +26,7 @@ class Tag(models.Model):
     )
     color = models.CharField(
         verbose_name='Цвет',
+        max_length=99,
     )
 
 
@@ -64,10 +66,12 @@ class IngredientsInRecipe(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         verbose_name='Рецепт',
+        on_delete=models.CASCADE,
     )
     ingredient = models.ForeignKey(
         Ingredient,
         verbose_name='Byuhtlbtyn',
+        on_delete=models.CASCADE,
     )
     amount = models.IntegerField(
         verbose_name='Количество',
@@ -78,10 +82,12 @@ class UserFavoriteRecipes(models.Model):
     user = models.ForeignKey(
         User,
         verbose_name='Пользователь',
+        on_delete=models.CASCADE,
     )
     recipe = models.ForeignKey(
         Recipe,
-        verbose_name='Рецепт'
+        verbose_name='Рецепт',
+        on_delete=models.CASCADE,
     )
 
 
@@ -89,8 +95,10 @@ class ShoppingList(models.Model):
     user = models.ForeignKey(
         User,
         verbose_name='Пользователь',
+        on_delete=models.CASCADE,
     )
     recipe = models.ForeignKey(
         Recipe,
-        verbose_name='Рецепт'
+        verbose_name='Рецепт',
+        on_delete=models.CASCADE,
     )
