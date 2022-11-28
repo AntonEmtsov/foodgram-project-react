@@ -40,6 +40,8 @@ class User(AbstractUser):
         max_length=settings.LAST_NAME_MAX_LENGTH,
         blank=True,
     )
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
     class Meta:
         ordering = ('username',)

@@ -2,10 +2,10 @@ from django.contrib import admin
 
 from .models import (
     Ingredient,
-    Tag,
     Recipe,
-    UserFavoriteRecipes,
     ShoppingList,
+    Tag,
+    UserFavoriteRecipes,
 )
 
 
@@ -30,8 +30,6 @@ class RecipeAdmin(admin.ModelAdmin):
     list_display = ('id', 'author', 'name')
     search_fields = ('author', 'name', 'tags')
     empty_value_display = '-пусто-'
-
-
 
 
 @admin.register(UserFavoriteRecipes)

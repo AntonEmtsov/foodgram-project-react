@@ -70,7 +70,7 @@ class IngredientsInRecipe(models.Model):
     )
     ingredient = models.ForeignKey(
         Ingredient,
-        verbose_name='Byuhtlbtyn',
+        verbose_name='Ингредиент',
         on_delete=models.CASCADE,
     )
     amount = models.IntegerField(
