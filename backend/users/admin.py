@@ -5,7 +5,9 @@ from .models import User, Follow
 
 @admin.register(User)
 class UsersAdmin(admin.ModelAdmin):
-    list_display = ('id', 'role', 'username', 'email',)
+    list_display = (
+        'id', 'role', 'username', 'email', 'first_name', 'last_name',
+    )
     search_fields = ('username', 'role',)
     list_filter = ('role', 'is_superuser',)
     empty_value_display = '-пусто-'

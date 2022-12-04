@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 from foodgram import settings
+from .validators import username_validate
 
 USER = 'user'
 MODERATOR = 'moderator'
@@ -23,6 +24,7 @@ class User(AbstractUser):
         verbose_name='Имя пользователя',
         max_length=settings.USERNAME_MAX_LENGTH,
         unique=True,
+        validators=[username_validate],
     )
     role = models.CharField(
         verbose_name='Роль',
@@ -47,6 +49,9 @@ class User(AbstractUser):
         ordering = ('username',)
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
+
+    def __str__(self):
+        return self.username
 
 
 class Follow(models.Model):

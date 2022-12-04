@@ -1,10 +1,14 @@
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-2(up@dwu7m8cmydp^wn#1u#%h9s+)0g&lx^%i8aahco3027%iu'  # noqa
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', default=True)
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
@@ -15,12 +19,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_filters',
+    'djoser',
+    'drf_yasg',
+    'colorfield',
     'rest_framework',
     'rest_framework.authtoken',
-    'djoser',
     'api',
     'users',
     'recipes',
+
 ]
 AUTH_USER_MODEL = 'users.User'
 
@@ -36,6 +43,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'foodgram.urls'
 
+TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -109,7 +117,13 @@ DJOSER = {
     'HIDE_USERS': False,
     'LOGIN_FIELD': 'email',
     'SERIALIZERS': {
-        'user': 'api.serializers.CustomUserSerializer',
+        'user': 'api.serializers.UserApiSerializer',
+        'user_create': 'api.serializers.UserCreateApiSerializer',
+        'current_user': 'api.serializers.UserApiSerializer',
+    },
+    'PERMISSIONS': {
+        'user_list': ('rest_framework.permissions.AllowAny',),
+        'user': ('rest_framework.permissions.AllowAny',),
     },
 }
 
@@ -121,4 +135,12 @@ EMAIL_MAX_LENGTH = 254
 FIRST_NAME_MAX_LENGTH = 150
 LAST_NAME_MAX_LENGTH = 150
 USERNAME_MAX_LENGTH = 150
-CONFIRMATION_CODE_MAX_LENGTH = 24
+
+INGREDIENT_NAME_MAX_LENGTH = 200
+INGREDIENT_MEASUREMENT_UNIT_MAX_LENGTH = 200
+TAG_NAME_MAX_LENGTH = 200
+TAG_SLUG_MAX_LENGTH = 200
+TAG_COLOR_MAX_LENGTH = 7
+RECIPE_NAME_MAX_LENGTH = 200
+RECIPE_COOKING_TIME_MIN_LENGTH = 1
+INGREDIENT_IN_RECIPE_MIN_LENGTH = 1

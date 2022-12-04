@@ -6,20 +6,26 @@ from .models import (
     ShoppingList,
     Tag,
     UserFavoriteRecipes,
+    IngredientsInRecipe
 )
+
+
+class IngredientRecipeInline(admin.TabularInline):
+    model = IngredientsInRecipe
 
 
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'measurement_unit')
     search_fields = ('name',)
-    list_filter = ('name',)
+    list_filter = ('measurement_unit',)
+    inlines = (IngredientRecipeInline,)
     empty_value_display = '-пусто-'
 
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'color', 'slug')
+    list_display = ('id', 'name', 'slug', 'color')
     search_fields = ('name',)
     list_filter = ('name',)
     empty_value_display = '-пусто-'
@@ -27,9 +33,17 @@ class TagAdmin(admin.ModelAdmin):
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'author', 'name')
+    list_display = (
+        'id', 'author', 'name', 'image', 'text',
+        'cooking_time', 'pub_date', 'favorited',
+    )
     search_fields = ('author', 'name', 'tags')
+    list_filter = ('tags',)
+    inlines = (IngredientRecipeInline,)
     empty_value_display = '-пусто-'
+
+    def favorited(self, obj):
+        return UserFavoriteRecipes.objects.filter(recipe=obj).count()
 
 
 @admin.register(UserFavoriteRecipes)
