@@ -1,5 +1,5 @@
 # praktikum_new_diplom
-![yamdb_workflow](https://github.com/russ044/foodgram-project-react/workflows/main.yml/badge.svg)
+![yamdb_workflow](https://github.com/russ044/foodgram-project-react/workflows/main/badge.svg)
 
 
 
