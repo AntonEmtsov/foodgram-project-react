@@ -4,14 +4,9 @@ from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
-from recipes.models import (
-    UserFavoriteRecipes,
-    Ingredient,
-    IngredientsInRecipe,
-    Recipe,
-    Tag,
-)
-from users.models import User, Follow
+from recipes.models import (Ingredient, IngredientsInRecipe, Recipe, Tag,
+                            UserFavoriteRecipes)
+from users.models import Follow, User
 from users.validators import username_validate
 
 

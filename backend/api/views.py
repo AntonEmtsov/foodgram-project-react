@@ -9,29 +9,17 @@ from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from users.models import Follow, User
 
 from .filters import IngredientFilter, RecipeFilter
 from .mixins import RetrieveListViewSet
 from .permissions import IsAuthorOrStaffOrReadOnly
-from recipes.models import (
-    Ingredient,
-    IngredientsInRecipe,
-    Recipe,
-    ShoppingList,
-    Tag,
-    UserFavoriteRecipes
-)
-from .serializers import (
-    FavoriteSerializer,
-    IngredientSerializer,
-    RecipeCreateSerializer,
-    RecipeListSerializer,
-    ShoppingCartSerializer,
-    SubscribeSerializer,
-    TagSerializer,
-    UserApiSerializer
-)
+from .serializers import (FavoriteSerializer, IngredientSerializer,
+                          RecipeCreateSerializer, RecipeListSerializer,
+                          ShoppingCartSerializer, SubscribeSerializer,
+                          TagSerializer, UserApiSerializer)
+from recipes.models import (Ingredient, IngredientsInRecipe, Recipe,
+                            ShoppingList, Tag, UserFavoriteRecipes)
+from users.models import Follow, User
 
 
 class UsersApiViewSet(UserViewSet):

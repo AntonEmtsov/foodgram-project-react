@@ -1,8 +1,8 @@
+from colorfield.fields import ColorField
 from django.core.validators import MinValueValidator
 from django.db import models
-from colorfield.fields import ColorField
-
 from foodgram import settings
+
 from users.models import User
 
 
