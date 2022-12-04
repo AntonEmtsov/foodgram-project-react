@@ -118,13 +118,13 @@ class RecipesViewSet(viewsets.ModelViewSet):
         return RecipeCreateSerializer
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        serializer.save()
 
     def perform_update(self, serializer):
         serializer.save()
 
     @action(
-        methods=['get', 'delete'],
+        methods=['post', 'delete'],
         detail=True,
         permission_classes=(IsAuthenticated, )
     )
@@ -137,7 +137,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
         )
         if user.is_anonymous:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
-        if request.method == 'GET':
+        if request.method == 'POST':
             if not favorite:
                 favorite = UserFavoriteRecipes.objects.create(
                     user=user,
@@ -195,17 +195,20 @@ class RecipesViewSet(viewsets.ModelViewSet):
         permission_classes=(IsAuthenticated, ),
     )
     def download_shopping_cart(self, request):
-        if self.request.user.is_anonymous:
+        if request.user.is_anonymous:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         ingredients = IngredientsInRecipe.objects.filter(
-            recipe__shopping_cart__user=request.user
+            id__in=request.user.shopping_cart.values_list(
+                'recipe__id',
+                flat=True,
+            )
         ).values(
             'ingredient__name',
             'ingredient__measurement_unit'
         ).annotate(ingredient_amount=Sum('amount')).values_list(
             'ingredient__name',
             'ingredient__measurement_unit',
-            'ingredient_amount'
+            'ingredient_amount',
         )
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = (
@@ -213,6 +216,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
             'filename="Shoppingcart.csv"'
         )
         response.write(u'\ufeff'.encode('utf8'))
+        writer = csv.writer(response)
         for item in list(ingredients):
-            csv.writer(response).writerow(item)
+            writer.writerow(item)
         return response

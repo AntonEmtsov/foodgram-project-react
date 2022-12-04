@@ -143,8 +143,8 @@ class IngredientRecipeCreateSerializer(serializers.ModelSerializer):
 
 
 class RecipeListSerializer(serializers.ModelSerializer):
-    tags = TagSerializer(many=True)
     author = UserApiSerializer()
+    tags = TagSerializer(many=True)
     ingredients = IngredientRecipeListSerializer(
         many=True,
         source='ingredient_recipe'
@@ -173,7 +173,7 @@ class RecipeListSerializer(serializers.ModelSerializer):
         if user.is_anonymous:
             return False
         return Recipe.objects.filter(
-            shopping_cart__user=user,
+            shoppinglist__user=user,
             id=obj.id
         ).exists()
 
@@ -182,10 +182,14 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
     author = serializers.HiddenField(default=serializers.CurrentUserDefault())
     tags = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(),
-        many=True
+        required=True,
+        many=True,
     )
-    ingredients = IngredientRecipeCreateSerializer(many=True)
-    image = Base64ImageField()
+    ingredients = IngredientRecipeCreateSerializer(
+        required=True,
+        many=True,
+    )
+    image = Base64ImageField(required=True)
 
     class Meta:
         model = Recipe
@@ -227,9 +231,14 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
                 defaults={'amount': amount},
             )
 
+    def to_representation(self, instance):
+        return RecipeListSerializer(instance, context=self.context).data
+
     def create(self, validated_data):
         ingredients = validated_data.pop('ingredients')
+        tags = validated_data.pop('tags')
         recipe = Recipe.objects.create(**validated_data)
+        recipe.tags.set(tags)
         for ingredient in ingredients:
             IngredientsInRecipe.objects.create(
                 recipe=recipe,
@@ -247,8 +256,7 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         instance.text = validated_data.get('text', instance.text)
         instance.image = validated_data.get('image', instance.image)
         instance.cooking_time = validated_data.get(
-            'cooking_time',
-            instance.cooking_time,
+            'cooking_time', instance.cooking_time
         )
         tags_data = validated_data.pop('tags')
         ingredients_data = validated_data.pop('ingredients')
@@ -263,9 +271,6 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
             )
         instance.save()
         return instance
-
-    def to_representation(self, instance):
-        return RecipeListSerializer(instance, context=self.context).data
 
 
 class ShoppingCartSerializer(serializers.ModelSerializer):
