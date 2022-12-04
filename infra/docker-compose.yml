@@ -8,16 +8,14 @@ services:
       - ./.env
 
   frontend:
-    build:
-      context: ../frontend
-      dockerfile: Dockerfile
+    image: russ044/foodgram-frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:
       - db
 
   backend:
-    image:
+    image: russ044/foodgram-backend:latest
     restart: always
     volumes:
       - static_value:/code/static/
@@ -28,7 +26,7 @@ services:
       - ./.env
 
   nginx:
-    image: nginx:1.19.3
+    image: nginx:1.21.3-alpine
     ports:
       - "80:80"
     volumes:
