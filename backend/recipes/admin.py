@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .models import (Ingredient, IngredientsInRecipe, Recipe, ShoppingList,
-                     Tag, UserFavoriteRecipes)
+                     Tag, UserFavoriteRecipe)
 
 
 class IngredientRecipeInline(admin.TabularInline):
@@ -37,10 +37,10 @@ class RecipeAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
 
     def favorited(self, obj):
-        return UserFavoriteRecipes.objects.filter(recipe=obj).count()
+        return UserFavoriteRecipe.objects.filter(recipe=obj).count()
 
 
-@admin.register(UserFavoriteRecipes)
+@admin.register(UserFavoriteRecipe)
 class UserFavoriteRecipesAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'recipe')
     search_fields = ('user',)

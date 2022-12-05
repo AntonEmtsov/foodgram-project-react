@@ -5,7 +5,7 @@ from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
 from recipes.models import (Ingredient, IngredientsInRecipe, Recipe, Tag,
-                            UserFavoriteRecipes)
+                            UserFavoriteRecipe)
 from users.models import Follow, User
 from users.validators import username_validate
 
@@ -163,7 +163,7 @@ class RecipeListSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         if user.is_anonymous:
             return False
-        return UserFavoriteRecipes.objects.filter(
+        return UserFavoriteRecipe.objects.filter(
             user=user,
             recipe=obj
         ).exists()
@@ -199,10 +199,10 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         )
 
     def validate_ingredients(self, data):
-        ingredients = self.initial_data.get('ingredients')
-        if ingredients == []:
+        ingredients = data
+        if not ingredients:
             raise serializers.ValidationError(
-                'Нужно выбрать хотябы 1 ингридиент!'
+                'Нужно выбрать хотябы 1 ингредиент!'
             )
         for ingredient in ingredients:
             if int(ingredient['amount']) <= 0:

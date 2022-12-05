@@ -5,6 +5,9 @@ from foodgram import settings
 
 from users.models import User
 
+MESSAGE_RECIPE_COOKING_TIME_MIN_LENGTH = 'Минимальное значение 1 минута!'
+MESSAGE_INGREDIENT_IN_RECIPE_MIN_LENGTH = 'Выберете хотя бы 1 ингредиент.'
+
 
 class Ingredient(models.Model):
     name = models.CharField(
@@ -64,7 +67,7 @@ class Recipe(models.Model):
         max_length=settings.RECIPE_NAME_MAX_LENGTH
     )
     image = models.ImageField(
-        'Картинк',
+        'Картинка',
         upload_to='recipes/images/'
     )
     text = models.TextField('Описание')
@@ -82,7 +85,7 @@ class Recipe(models.Model):
         validators=[
             MinValueValidator(
                 settings.RECIPE_COOKING_TIME_MIN_LENGTH,
-                message='Минимальное значение 1 минута!',
+                message=MESSAGE_RECIPE_COOKING_TIME_MIN_LENGTH,
             )
         ]
     )
@@ -118,7 +121,7 @@ class IngredientsInRecipe(models.Model):
         validators=[
             MinValueValidator(
                 settings.INGREDIENT_IN_RECIPE_MIN_LENGTH,
-                message='Выберете хотя бы 1 ингредиент.',
+                message=MESSAGE_INGREDIENT_IN_RECIPE_MIN_LENGTH,
             )
         ]
     )
@@ -126,13 +129,21 @@ class IngredientsInRecipe(models.Model):
     class Meta:
         verbose_name = 'Ингредиент в рецепте'
         verbose_name_plural = 'Ингредиенты в рецепте'
+        constraints = (
+            models.UniqueConstraint(
+                fields=('recipe', 'ingredient'),
+                name='Единственность ингредиента в рецепте',
+            ),
+        )
 
     def __str__(self):
-        return (f'{self.ingredient.name} - {self.amount}'
-                f' {self.ingredient.measurement_unit}')
+        return (
+            f'{self.ingredient.name} - {self.amount}'
+            f' {self.ingredient.measurement_unit}'
+        )
 
 
-class UserFavoriteRecipes(models.Model):
+class UserFavoriteRecipe(models.Model):
     user = models.ForeignKey(
         User,
         verbose_name='Пользователь',
@@ -148,6 +159,12 @@ class UserFavoriteRecipes(models.Model):
     class Meta:
         verbose_name = 'Избранный'
         verbose_name_plural = 'Избранные'
+        constraints = (
+            models.UniqueConstraint(
+                fields=('user', 'recipe'),
+                name='Уникальность избранности рецепта',
+            ),
+        )
 
 
 class ShoppingList(models.Model):
@@ -166,3 +183,9 @@ class ShoppingList(models.Model):
     class Meta:
         verbose_name = 'Список покупок'
         verbose_name_plural = 'Списки покупок'
+        constraints = (
+            models.UniqueConstraint(
+                fields=('user', 'recipe'),
+                name='Уникальность списка покупок',
+            ),
+        )
