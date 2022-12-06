@@ -1,4 +1,3 @@
-from django.db.models import F
 from django.shortcuts import get_object_or_404
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
@@ -211,26 +210,6 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
                 )
         return data
 
-    def get_ingredients(self, obj):
-        return IngredientRecipeListSerializer(
-            IngredientsInRecipe.objects.filter(recipe=obj)
-        ).data
-
-    def add_recipe_ingredients(self, ingredients, recipe):
-        for ingredient in ingredients:
-            ingredient_id = ingredient['id']
-            amount = ingredient['amount']
-            if IngredientsInRecipe.objects.filter(
-                recipe=recipe,
-                ingredient=ingredient_id,
-            ).exists():
-                amount += F('amount')
-            IngredientsInRecipe.objects.update_or_create(
-                recipe=recipe,
-                ingredient=ingredient_id,
-                defaults={'amount': amount},
-            )
-
     def to_representation(self, instance):
         return RecipeListSerializer(instance, context=self.context).data
 
@@ -239,38 +218,26 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         tags = validated_data.pop('tags')
         recipe = Recipe.objects.create(**validated_data)
         recipe.tags.set(tags)
-        for ingredient in ingredients:
-            IngredientsInRecipe.objects.create(
+        create_ingredients = [
+            IngredientsInRecipe(
                 recipe=recipe,
-                ingredient=get_object_or_404(
-                    Ingredient,
-                    id=ingredient.get('id')
-                ),
-                amount=ingredient.get('amount'),
+                ingredient_id=ingredient.get('id'),
+                amount=ingredient['amount']
             )
-        recipe.save()
+            for ingredient in ingredients
+        ]
+        IngredientsInRecipe.objects.bulk_create(create_ingredients)
         return recipe
 
     def update(self, instance, validated_data):
-        instance.name = validated_data.get('name', instance.name)
-        instance.text = validated_data.get('text', instance.text)
-        instance.image = validated_data.get('image', instance.image)
-        instance.cooking_time = validated_data.get(
-            'cooking_time', instance.cooking_time
-        )
-        tags_data = validated_data.pop('tags')
-        ingredients_data = validated_data.pop('ingredients')
         instance.tags.clear()
         instance.ingredients.clear()
-        for tag in tags_data:
-            instance.tags.add(get_object_or_404(Tag, id=tag.id))
-        for ingredient in ingredients_data:
+        for ingredient in validated_data.pop('ingredients'):
             instance.ingredients.add(
                 get_object_or_404(Ingredient, id=ingredient.get('id')),
                 through_defaults={'amount': ingredient.get('amount')}
             )
-        instance.save()
-        return instance
+        return super().update(instance, validated_data)
 
 
 class ShoppingCartSerializer(serializers.ModelSerializer):
