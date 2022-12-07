@@ -1,6 +1,10 @@
 # Foodgram - Продуктовый помощник
 ![foodgram_project_react_workflow](https://github.com/russ044/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)
 
+Админка:
+admin@admin.ru
+admin
+
 ### Тенологии используемые в проекте:
 - python 3.8
 - django 4.1.3
