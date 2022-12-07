@@ -9,9 +9,6 @@ services:
       - ./.env
 
   frontend:
-#    build:
-#      context: ../frontend
-#      dockerfile: Dockerfile
     image: russ044/foodgram-frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
@@ -42,9 +39,6 @@ services:
     restart: always
     depends_on:
       - backend
-      - frontend
-    env_file:
-      - ./.env
 
 volumes:
   postgres_value:
