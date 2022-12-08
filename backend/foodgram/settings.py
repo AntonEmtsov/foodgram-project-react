@@ -1,11 +1,16 @@
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', default='secret_key')
 DEBUG = os.getenv('DEBUG', default=False)
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default=['*'])
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default=('localhost', 'backend')).split(' ')  # noqa
+# ALLOWED_HOSTS = ('127.0.0.1', 'backend')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -58,6 +63,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'foodgram.wsgi.application'
 
+DATABASES = {
+    'default': {
+        'ENGINE': os.getenv('DB_ENGINE', default="django.db.backends.postgresql_psycopg2"),  # noqa
+        'NAME': os.getenv('DB_NAME', default="foodgram_db"),
+        'USER': os.getenv('POSTGRES_USER', default="postgres"),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', default="admin"),
+        'HOST': os.getenv('DB_HOST', default="localhost"),
+        'PORT': os.getenv('DB_PORT', default="5432")
+    }
+}
+
+'''
 if DEBUG:
     DATABASES = {
         'default': {
@@ -68,14 +85,15 @@ if DEBUG:
 else:
     DATABASES = {
         'default': {
-            'ENGINE': os.getenv('DB_ENGINE', default="django.db.backends.postgresql_psycopg2"),
-            'NAME': os.getenv('DB_NAME', default="postgres"),
+            'ENGINE': os.getenv('DB_ENGINE', default="django.db.backends.postgresql_psycopg2"),  # noqa
+            'NAME': os.getenv('DB_NAME', default="foodgram_db"),
             'USER': os.getenv('POSTGRES_USER', default="postgres"),
-            'PASSWORD': os.getenv('POSTGRES_PASSWORD', default="postgres"),
-            'HOST': os.getenv('DB_HOST', default="db"),
+            'PASSWORD': os.getenv('POSTGRES_PASSWORD', default="admin"),
+            'HOST': os.getenv('DB_HOST', default="localhost"),
             'PORT': os.getenv('DB_PORT', default="5432")
         }
     }
+'''
 
 AUTH_PASSWORD_VALIDATORS = [
     {
