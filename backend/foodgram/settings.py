@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', default='secret_key')
 DEBUG = os.getenv('DEBUG', default=False)
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default=('localhost', 'backend', '127.0.0.1')).split(' ')  # noqa
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default=('localhost', 'backend')).split(' ')  # noqa
 # ALLOWED_HOSTS = ('localhost', 'backend')
 
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
