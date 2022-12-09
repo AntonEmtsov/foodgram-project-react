@@ -27,7 +27,7 @@ services:
       python manage.py collectstatic --noinput &&
       gunicorn --bind 0:8000 foodgram.wsgi"
     ports:
-      - 8080:8080
+      - 8000:8000
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/
