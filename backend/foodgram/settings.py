@@ -9,9 +9,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', default='secret_key')
 DEBUG = os.getenv('DEBUG', default=False)
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default=('localhost', 'backend')).split(' ')  # noqa
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default=('localhost', 'backend', '127.0.0.1')).split(' ')  # noqa
 # ALLOWED_HOSTS = ('localhost', 'backend')
 
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# SECURE_SSL_REDIRECT = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -122,8 +126,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',
@@ -167,5 +169,3 @@ TAG_COLOR_MAX_LENGTH = 7
 RECIPE_NAME_MAX_LENGTH = 200
 RECIPE_COOKING_TIME_MIN_LENGTH = 1
 INGREDIENT_IN_RECIPE_MIN_LENGTH = 1
-
-CSRF_TRUSTED_ORIGINS = ["http://158.160.38.190"]
