@@ -26,6 +26,8 @@ services:
       bash -c "python manage.py migrate &&
       python manage.py collectstatic --noinput &&
       gunicorn --bind 0:8000 foodgram.wsgi"
+    ports:
+      - 8000:8000
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/
