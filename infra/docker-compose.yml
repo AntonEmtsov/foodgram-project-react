@@ -15,9 +15,6 @@ services:
 
   backend:
     image: russ044/foodgram-backend:latest
-#    build:
-#      context: ../backend
-#      dockerfile: Dockerfile
     restart: always
     command: >
       bash -c "python manage.py migrate &&
