@@ -8,9 +8,11 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', default='secret_key')
-DEBUG = os.getenv('DEBUG', default=False)
+
+# DEBUG = os.getenv('DEBUG', default=False)
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default=['*']).split(' ')  # noqa
-# ALLOWED_HOSTS = ('localhost', 'backend')
+# ALLOWED_HOSTS = ('127.0.0.1', 'backend')
+DEBUG = False
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -123,28 +125,22 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
     ),
-    'DEFAULT_PAGINATION_CLASS':
-        'rest_framework.pagination.LimitOffsetPagination',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',  # noqa
     'PAGE_SIZE': 6,
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
+    ],
 }
 
 DJOSER = {
     'HIDE_USERS': False,
     'LOGIN_FIELD': 'email',
-    'SERIALIZERS': {
-        'user': 'api.serializers.UserApiSerializer',
-        'user_create': 'api.serializers.UserCreateApiSerializer',
-        'current_user': 'api.serializers.UserApiSerializer',
-    },
-    'PERMISSIONS': {
-        'user_list': ('rest_framework.permissions.AllowAny',),
-        'user': ('rest_framework.permissions.AllowAny',),
-    },
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'

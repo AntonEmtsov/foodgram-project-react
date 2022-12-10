@@ -35,15 +35,11 @@ class User(AbstractUser):
     first_name = models.CharField(
         verbose_name='Имя',
         max_length=settings.FIRST_NAME_MAX_LENGTH,
-        blank=True,
     )
     last_name = models.CharField(
         verbose_name='Фамилия',
         max_length=settings.LAST_NAME_MAX_LENGTH,
-        blank=True,
     )
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
     @property
     def is_admin(self):
@@ -63,10 +59,10 @@ class User(AbstractUser):
         verbose_name_plural = 'Пользователи'
 
     def __str__(self):
-        return self.username
+        return f'{self.username}, {self.email}'
 
 
-class Follow(models.Model):
+class Subscribe(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -79,17 +75,26 @@ class Follow(models.Model):
         related_name='following',
         verbose_name='Автор'
     )
+    created = models.DateTimeField(
+        'Дата подписки',
+        auto_now_add=True
+    )
 
     class Meta:
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
-        constraints = [
+        ordering = ('-id',)
+        constraints = (
             models.UniqueConstraint(
+                fields=('user', 'author'),
                 name='Единственность подписки',
-                fields=['user', 'author'],
             ),
             models.CheckConstraint(
                 name='Запрет на Самоподписку',
                 check=~models.Q(user=models.F('author'))
             ),
-        ]
+        )
+
+    def __str__(self):
+        return (f'Пользователь: {self.user.username},'
+                f' автор: {self.author.username}')
