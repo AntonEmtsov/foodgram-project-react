@@ -18,10 +18,9 @@ services:
     restart: always
     command: >
       bash -c "python manage.py migrate &&
-      python manage.py collectstatic --noinput &&
-      gunicorn --bind 0:8080 foodgram.wsgi"
+      python manage.py collectstatic --noinput"
     ports:
-      - 8080:8080
+      - 8000:8000
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/
@@ -31,7 +30,7 @@ services:
       - ./.env
 
   nginx:
-    image: nginx:1.21.3-alpine
+    image: nginx:latest
     ports:
       - 8001:80
     volumes:
