@@ -32,7 +32,7 @@ sudo apt-get install docker-compose-plugin
 Скопируйте файлы docker-compose.yaml и nginx/default.conf из проекта на сервер в home/<ваш_username>/docker-compose.yaml и home/<ваш_username>/nginx/default.conf соответственно:
 ```
 scp ./docker-compose.yml <ваш_username>@<host>:/home/<ваш_username>/
-scp ./docker-compose.yml <ваш_username>@<host>:/home/<ваш_username>/nginx/default.conf
+scp ./nginx.conf russ044@158.160.38.190:/home/russ044/nginx.conf
 ```
 В репозитории на GitHub необходимо прописать Secrets. Переменые прописаны в yamdb_workflow.yaml.
 Выполнить push в ветку main. Приложение само пройдет тесты, обновит образ на DockerHub и выполнит деплой на боевой сервер
