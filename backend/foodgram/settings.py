@@ -12,11 +12,6 @@ DEBUG = os.getenv('DEBUG', default=False)
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default=('localhost', 'backend')).split(' ')  # noqa
 # ALLOWED_HOSTS = ('localhost', 'backend')
 
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-# SECURE_SSL_REDIRECT = True
-# SESSION_COOKIE_SECURE = True
-# CSRF_COOKIE_SECURE = True
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',

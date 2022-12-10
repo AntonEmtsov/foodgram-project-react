@@ -9,18 +9,15 @@ services:
       - ./.env
 
   frontend:
-#    build:
-#      context: ../frontend
-#      dockerfile: Dockerfile
     image: russ044/foodgram-frontend
     volumes:
       - ../frontend/:/app/result_build/
 
   backend:
     image: russ044/foodgram-backend:latest
-    #build:
-    #  context: ../backend
-    #  dockerfile: Dockerfile
+#    build:
+#      context: ../backend
+#      dockerfile: Dockerfile
     restart: always
     command: >
       bash -c "python manage.py migrate &&
