@@ -10,9 +10,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', default='secret_key')
 
 # DEBUG = os.getenv('DEBUG', default=False)
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default=['*']).split(' ')  # noqa
-# ALLOWED_HOSTS = ('127.0.0.1', 'backend')
-DEBUG = False
+# ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default=['*']).split(' ')  # noqa
+ALLOWED_HOSTS = ('127.0.0.1', 'backend')
+DEBUG = True
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -30,8 +30,8 @@ INSTALLED_APPS = [
     'api',
     'users',
     'recipes',
-
 ]
+
 AUTH_USER_MODEL = 'users.User'
 
 MIDDLEWARE = [
@@ -124,35 +124,33 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
+    'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
-    ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
-    ),
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',  # noqa
-    'PAGE_SIZE': 6,
-    'DEFAULT_FILTER_BACKENDS': [
-        'django_filters.rest_framework.DjangoFilterBackend',
-        'rest_framework.filters.SearchFilter',
     ],
+
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    "DEFAULT_FILTER_BACKENDS": [
+        "django_filters.rest_framework.DjangoFilterBackend"
+    ],
+
 }
 
 DJOSER = {
+
+    'PERMISSIONS': {
+        'user': ['rest_framework.permissions.IsAuthenticated'],
+        'user_list': ['rest_framework.permissions.IsAuthenticated'],
+    },
+
+    'SERIALIZERS': {
+        'user_create': 'api.serializers.SingUpSerializer',
+        'user': 'api.serializers.CustomUserSerializer',
+        'current_user': 'api.serializers.CustomUserSerializer',
+    },
+
     'HIDE_USERS': False,
-    'LOGIN_FIELD': 'email',
 }
 
-EMAIL_MAX_LENGTH = 254
-FIRST_NAME_MAX_LENGTH = 150
-LAST_NAME_MAX_LENGTH = 150
-USERNAME_MAX_LENGTH = 150
-
-INGREDIENT_NAME_MAX_LENGTH = 200
-INGREDIENT_MEASUREMENT_UNIT_MAX_LENGTH = 200
-TAG_NAME_MAX_LENGTH = 200
-TAG_SLUG_MAX_LENGTH = 200
-TAG_COLOR_MAX_LENGTH = 7
-RECIPE_NAME_MAX_LENGTH = 200
-RECIPE_COOKING_TIME_MIN_LENGTH = 1
-INGREDIENT_IN_RECIPE_MIN_LENGTH = 1
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
