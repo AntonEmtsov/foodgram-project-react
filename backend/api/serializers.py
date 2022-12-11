@@ -183,7 +183,7 @@ class RecipeSerializer(serializers.ModelSerializer):
                     'Ингредиенты не должны повторяться'
                 )
             ingredients_list.append(ingredient_id)
-            if ingredient['amount'] <= 1:
+            if ingredient['amount'] < 1:
                 raise serializers.ValidationError(
                     'Количество ингредиента должно быть не менее 1'
                 )
