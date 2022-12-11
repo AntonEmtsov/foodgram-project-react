@@ -103,14 +103,14 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         return serializer.save(author=self.request.user)
 
-    def recipe_post_method(self, request, AnySerializer, pk):
+    def recipe_post_method(self, request, anyserializer, pk):
         user = request.user
         recipe = get_object_or_404(Recipe, id=pk)
         data = {
             'user': user.id,
             'recipe': recipe.id,
         }
-        serializer = AnySerializer(
+        serializer = anyserializer(
             data=data,
             context={'request': request}
         )
@@ -118,11 +118,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    def recipe_delete_method(self, request, AnyModel, pk):
+    def recipe_delete_method(self, request, anymodel, pk):
         user = request.user
         recipe = get_object_or_404(Recipe, id=pk)
         favorites = get_object_or_404(
-            AnyModel, user=user, recipe=recipe
+            anymodel, user=user, recipe=recipe
         )
         favorites.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
