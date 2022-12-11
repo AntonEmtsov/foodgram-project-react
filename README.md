@@ -1,6 +1,8 @@
 # Foodgram - Продуктовый помощник
 ![foodgram_project_react_workflow](https://github.com/russ044/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)
 
+http://158.160.38.190/
+
 Админка:
 admin@admin.ru
 admin
