@@ -15,7 +15,7 @@ class UsersAdmin(admin.ModelAdmin):
 
 @admin.register(Subscribe)
 class SubscribeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'author')
-    search_fields = ('user',)
-    list_filter = ('user', )
+    list_display = ('id', 'following', 'author')
+    search_fields = ('following',)
+    list_filter = ('following', )
     empty_value_display = '-пусто-'

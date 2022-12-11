@@ -56,14 +56,12 @@ class Subscribe(models.Model):
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
         constraints = [
-            models.UniqueConstraint(
-                name='Единственность подписки',
-                fields=['user', 'author'],
-            ),
+            models.UniqueConstraint(fields=["author", "following"],
+                                    name="user_following"),
             models.CheckConstraint(
-                name='Запрет на Самоподписку',
-                check=~models.Q(user=models.F('author'))
-            ),
+                check=~models.Q(author=models.F('following')),
+                name='not_self_following_author'
+            )
         ]
 
     def __str__(self):
