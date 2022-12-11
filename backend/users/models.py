@@ -1,15 +1,36 @@
 from django.contrib.auth.models import AbstractUser
-from django.db import models
+from django.db.models import CharField, EmailField
+
+USER = 'user'
+ADMIN = 'admin'
 
 
 class User(AbstractUser):
-    email = models.EmailField(
+    ROLE_CHOICES = (
+        (USER, 'Пользователь'),
+        (ADMIN, 'Администратор'),
+    )
+    first_name = CharField(
+        'Имя',
+        max_length=50,
+    )
+    last_name = CharField(
+        'Фамилия',
+        max_length=50
+    )
+    email = EmailField(
+        'Адрес электронной почты',
         max_length=254,
         unique=True,
-        db_index=True
     )
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'password', 'first_name', 'last_name']
+
+    @property
+    def is_user(self):
+        return self.role == USER
+
+    @property
+    def is_admin(self):
+        return self.role == ADMIN
 
     class Meta:
         ordering = ('username',)
@@ -17,37 +38,4 @@ class User(AbstractUser):
         verbose_name_plural = 'Пользователи'
 
     def __str__(self):
-        return self.username
-
-
-class Subscribe(models.Model):
-    user = models.ForeignKey(
-        User,
-        verbose_name='Подписчик',
-        on_delete=models.CASCADE,
-        related_name='followers',
-    )
-    following = models.ForeignKey(
-        User,
-        verbose_name='Автор',
-        on_delete=models.CASCADE,
-        related_name='following'
-    )
-
-    class Meta:
-        verbose_name = 'Подписчик'
-        verbose_name_plural = 'Подписчики'
-
-        constraints = [
-            models.UniqueConstraint(
-                name='Единственность подписки',
-                fields=['user', 'following'],
-            ),
-            models.CheckConstraint(
-                name='Запрет на Самоподписку',
-                check=~models.Q(user=models.F('following'))
-            ),
-        ]
-
-    def __str__(self):
-        return f'{self.user}, {self.following}'
+        return self.email

@@ -1,56 +1,86 @@
 from django.contrib import admin
 
-from .models import (Favorite, Ingredient, Purchase, Recipe, RecipeIngredient,
-                     Tag)
-
-
-class IngredientRecipeInline(admin.TabularInline):
-    model = RecipeIngredient
+from .models import (FavoriteRecipe, Ingredient, IngredientInRecipe, Recipe,
+                     ShoppingCart, Subscribe, Tag)
 
 
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'measurement_unit')
-    search_fields = ('name',)
-    list_filter = ('measurement_unit',)
-    inlines = (IngredientRecipeInline,)
-    empty_value_display = '-пусто-'
-
-
-@admin.register(Tag)
-class TagAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'slug', 'color')
+    list_display = (
+        'id',
+        'name',
+        'measurement_unit'
+    )
     search_fields = ('name',)
     list_filter = ('name',)
     empty_value_display = '-пусто-'
 
 
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'name',
+        'slug',
+        'color'
+    )
+    search_fields = ('name',)
+    list_filter = ('name',)
+    empty_value_display = '-пусто-'
+
+
+class IngredientInRecipeAdmin(admin.StackedInline):
+    model = IngredientInRecipe
+    autocomplete_fields = ('ingredient',)
+
+
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     list_display = (
-        'id', 'author', 'name', 'image', 'text',
-        'cooking_time', 'favorited', 'pub_date',
+        'name',
+        'image',
+        'text',
+        'cooking_time',
+        'pub_date',
+        'favorite_count'
     )
-    search_fields = ('author', 'name', 'tags')
-    list_filter = ('tags',)
-    inlines = (IngredientRecipeInline,)
+    search_fields = ('name', 'author', 'tag')
+    list_filter = ('name',)
+    inlines = (IngredientInRecipeAdmin,)
     empty_value_display = '-пусто-'
 
-    def favorited(self, obj):
-        return Favorite.objects.filter(recipe=obj).count()
+    @admin.display(description='В избранном')
+    def favorite_count(self, obj):
+        return obj.is_favorited.count()
 
 
-@admin.register(Favorite)
-class UserFavoriteRecipesAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'recipe')
+@admin.register(Subscribe)
+class SubscribeAdmin(admin.ModelAdmin):
+    list_display = (
+        'user',
+        'author',
+        'pub_date',
+    )
     search_fields = ('user',)
     list_filter = ('user',)
     empty_value_display = '-пусто-'
 
 
-@admin.register(Purchase)
-class ShoppingListAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'recipe')
-    search_fields = ('user',)
-    list_filter = ('user',)
+@admin.register(FavoriteRecipe)
+class FavoriteRecipeAdmin(admin.ModelAdmin):
+    list_display = (
+        'author',
+    )
+    search_fields = ('author',)
+    list_filter = ('author',)
+    empty_value_display = '-пусто-'
+
+
+@admin.register(ShoppingCart)
+class ShoppingCartAdmin(admin.ModelAdmin):
+    list_display = (
+        'author',
+    )
+    search_fields = ('author',)
+    list_filter = ('author',)
     empty_value_display = '-пусто-'

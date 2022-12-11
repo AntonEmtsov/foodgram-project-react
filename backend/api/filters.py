@@ -1,39 +1,36 @@
-import django_filters as filters
+from django_filters.rest_framework import (BooleanFilter, CharFilter,
+                                           FilterSet,
+                                           ModelMultipleChoiceFilter)
+from recipes.models import Recipe, Tag
 from rest_framework.filters import SearchFilter
 
-from recipes.models import Recipe, Tag
 
-
-class IngredientSearchFilter(SearchFilter):
+class IngredientFilter(SearchFilter):
     search_param = 'name'
 
 
-class RecipeFilter(filters.FilterSet):
-    tags = filters.ModelMultipleChoiceFilter(
+class RecipeFilter(FilterSet):
+    author = CharFilter(field_name='author__id',)
+    tags = ModelMultipleChoiceFilter(
         field_name='tags__slug',
-        queryset=Tag.objects.all(),
         to_field_name='slug',
+        queryset=Tag.objects.all()
     )
+    is_favorited = BooleanFilter(method='favorited_filter')
+    is_in_shopping_cart = BooleanFilter(method='shopping_cart_filter')
 
-    is_favorited = filters.BooleanFilter(
-        method='get_is_favorited'
-    )
-    is_in_shopping_cart = filters.BooleanFilter(
-        method='get_is_in_shopping_cart'
-    )
+    def favorited_filter(self, queryset, name, value):
+        user = self.request.user
+        if value:
+            return queryset.filter(is_favorited__author=user)
+        return queryset
+
+    def shopping_cart_filter(self, queryset, name, value):
+        user = self.request.user
+        if value:
+            return queryset.filter(is_in_shopping_cart__author=user)
+        return queryset
 
     class Meta:
         model = Recipe
-        fields = ('is_favorited', 'is_in_shopping_cart', 'author', 'tags')
-
-    def get_is_favorited(self, queryset, name, value):
-        user = self.request.user
-        if value:
-            return queryset.filter(is_favorited__user=user)
-        return queryset
-
-    def get_is_in_shopping_cart(self, queryset, name, value):
-        user = self.request.user
-        if value:
-            return queryset.filter(is_in_shopping_cart=user)
-        return queryset
+        fields = ('tags', 'author', 'is_favorited')
