@@ -188,13 +188,12 @@ class CreateUpdateRecipeSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         ingredients = self.initial_data.get('ingredients')
-        ingredients_list = []
-        for ingredient in ingredients:
-            if ingredient['id'] in ingredients_list:
-                raise ValidationError(
-                    'Нельзя добавлять один и тот же ингредиент дважды.'
-                )
-            ingredients_list.append(ingredient['id'])
+        print(data['ingredients'])
+        ingredients = data
+        if not ingredients:
+            raise serializers.ValidationError(
+                'Нужно выбрать хотябы 1 ингредиент!'
+            )
         if data['cooking_time'] <= 0:
             raise ValidationError(
                 'Минимум 1 минута'
