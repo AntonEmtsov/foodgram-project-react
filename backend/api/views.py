@@ -147,12 +147,10 @@ class RecipeViewSet(ModelViewSet):
             'ingredient__measurement_unit'
         ).annotate(total=Sum('amount'))
         ingredient_list = []
-        if not ingredient_list:
-            pass
         for ingredient in ingredients:
             line = (
                 f'{ingredient["ingredient__name"]}: {ingredient["total"]} '
-                f'{ingredient["ingredient__measurement_unit"]}'
+                f'{ingredient["ingredient__measurement_unit"]} \n'
             )
             ingredient_list.append(line)
         response = HttpResponse(ingredient_list, 'Content-Type: text/plain')
