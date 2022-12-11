@@ -1,3 +1,4 @@
+import csv
 from django.db import transaction
 from django.db.models import Sum
 from django.http.response import HttpResponse
@@ -149,15 +150,18 @@ class RecipeViewSet(ModelViewSet):
         ).values(
             'ingredient__name',
             'ingredient__measurement_unit'
-        ).annotate(total=Sum('amount'))
-        ingredient_list = []
-        for ingredient in ingredients:
-            line = (
-                f'{ingredient["ingredient__name"]}: {ingredient["total"]} \n'
-                f'{ingredient["ingredient__measurement_unit"]}'
-            )
-            ingredient_list.append(line)
-        response = HttpResponse(ingredient_list, 'Content-Type: text/plain')
-        file = 'attachment; filename="ingredient_list.txt"'
-        response['Content-Disposition'] = file
+        ).annotate(total=Sum('amount')).values_list(
+            'ingredient__name',
+            'ingredient__measurement_unit',
+            'ingredient_amount',
+        )
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = (
+            'attachment;'
+            'filename="Shoppingcart.csv"'
+        )
+        response.write(u'\ufeff'.encode('utf8'))
+        writer = csv.writer(response)
+        for item in list(ingredients):
+            writer.writerow(item)
         return response
