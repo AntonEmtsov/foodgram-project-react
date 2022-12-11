@@ -187,8 +187,6 @@ class CreateUpdateRecipeSerializer(serializers.ModelSerializer):
         ])
 
     def validate(self, data):
-        ingredients = self.initial_data.get('ingredients')
-        print(data['ingredients'])
         ingredients = data
         if not ingredients:
             raise serializers.ValidationError(
