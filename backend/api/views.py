@@ -36,9 +36,10 @@ class CustomUserViewSet(UserViewSet):
     def subscribe(self, request, id):
         user = request.user
         following = get_object_or_404(User, id=id)
-        data = {'user': user.id, 'following': following.id}
         if request.method == 'POST':
-            serializer = SubscribeSerializer(data=data)
+            serializer = SubscribeSerializer(
+                data={'user': user.id, 'following': following.id}
+            )
             serializer.is_valid(raise_exception=True)
             serializer.save()
             serializer = CustomUserSerializer(
@@ -59,15 +60,18 @@ class CustomUserViewSet(UserViewSet):
         methods=['GET'],
         permission_classes=[IsAuthenticated],
         url_name='subscriptions',
-        url_path='subscriptions'
+        url_path='subscriptions',
     )
     def subscriptions(self, request):
-        user_obj = User.objects.filter(following__user=request.user)
         paginator = PageNumberPagination()
         paginator.page_size = 6
-        result_page = paginator.paginate_queryset(user_obj, request)
         serializer = SubscriptionsSerializer(
-            result_page, many=True, context={'current_user': request.user})
+            paginator.paginate_queryset(User.objects.filter(
+                following__user=request.user
+            ), request),
+            many=True,
+            context={'current_user': request.user}
+        )
         return paginator.get_paginated_response(serializer.data)
 
 
@@ -143,16 +147,16 @@ class RecipeViewSet(ModelViewSet):
         ingredients = RecipeIngredient.objects.filter(
             recipe__purchase__user=request.user
         ).values(
-            'ingredient__name', 'ingredient__measurement_unit'
-        ).annotate(
-            total=Sum('amount')
-        )
+            'ingredient__name',
+            'ingredient__measurement_unit'
+        ).annotate(total=Sum('amount'))
         ingredient_list = []
         for ingredient in ingredients:
-            line = f'{ingredient["ingredient__name"]}:{ingredient["total"]} \n'
-            f'{ingredient["ingredient__measurement_unit"]}'
+            line = (
+                f'{ingredient["ingredient__name"]}: {ingredient["total"]} \n'
+                f'{ingredient["ingredient__measurement_unit"]}'
+            )
             ingredient_list.append(line)
-        ingredient_list.append('\nСпасибо, что Вы с нами!')
         response = HttpResponse(ingredient_list, 'Content-Type: text/plain')
         file = 'attachment; filename="ingredient_list.txt"'
         response['Content-Disposition'] = file

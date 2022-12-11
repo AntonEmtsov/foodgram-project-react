@@ -10,9 +10,9 @@ class IngredientSearchFilter(SearchFilter):
 
 class RecipeFilter(filters.FilterSet):
     tags = filters.ModelMultipleChoiceFilter(
-        field_name="tags__slug",
+        field_name='tags__slug',
         queryset=Tag.objects.all(),
-        to_field_name="slug",
+        to_field_name='slug',
     )
 
     is_favorited = filters.CharFilter(

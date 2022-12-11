@@ -6,6 +6,7 @@ from rest_framework.validators import UniqueTogetherValidator
 from recipes.models import (Favorite, Ingredient, Purchase, Recipe,
                             RecipeIngredient, Tag)
 from users.models import Subscribe, User
+from users.validators import username_validate
 
 
 class SingUpSerializer(UserCreateSerializer):
@@ -15,6 +16,10 @@ class SingUpSerializer(UserCreateSerializer):
             'id', 'username', 'email', 'first_name',
             'last_name', 'password'
         )
+
+    def validate_username(self, value):
+        username_validate(value)
+        return value
 
 
 class CustomUserSerializer(UserSerializer):
@@ -126,7 +131,8 @@ class IngredientForCreateSerializer(serializers.ModelSerializer):
 
 class RecipeSerializer(serializers.ModelSerializer):
     tags = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=Tag.objects.all()
+        many=True,
+        queryset=Tag.objects.all(),
     )
     author = CustomUserSerializer(read_only=True)
     ingredients = IngredientForCreateSerializer(many=True, write_only=True)
@@ -137,16 +143,8 @@ class RecipeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = (
-            'id',
-            'tags',
-            'author',
-            'ingredients',
-            'is_favorited',
-            'is_in_shopping_cart',
-            'name',
-            'image',
-            'text',
-            'cooking_time'
+            'id', 'tags', 'author', 'ingredients', 'is_favorited',
+            'is_in_shopping_cart', 'name', 'image', 'text', 'cooking_time'
         )
 
     def get_is_favorited(self, obj):
@@ -185,38 +183,33 @@ class RecipeSerializer(serializers.ModelSerializer):
                     'Ингредиенты не должны повторяться'
                 )
             ingredients_list.append(ingredient_id)
-            if ingredient['amount'] < 1:
+            if ingredient['amount'] <= 1:
                 raise serializers.ValidationError(
-                    'Количество ингредиента должно быть больше 1'
+                    'Количество ингредиента должно быть не менее 1'
                 )
 
         data['ingredients'] = ingredients
         if not tags:
-            raise serializers.ValidationError('Тэг обязателен')
+            raise serializers.ValidationError('Тег обязателен')
         data['tags'] = tags
         if len(tags) != len(set(tags)):
-            raise serializers.ValidationError('Тэги не должны повторяться')
+            raise serializers.ValidationError('Теги не должны повторяться')
         return data
 
     def create(self, validated_data):
-        request = self.context.get('request')
-        image = validated_data.pop('image')
-        ingredients_data = validated_data.pop('ingredients')
-        tags_data = validated_data.pop('tags')
         recipe = Recipe.objects.create(
-            author=request.user,
-            image=image,
+            author=self.context.get('request').user,
+            image=validated_data.pop('image'),
             **validated_data
         )
-        self.create_ingredients(ingredients_data, recipe)
-        recipe.tags.set(tags_data)
+        self.create_ingredients(validated_data.pop('ingredients'), recipe)
+        recipe.tags.set(validated_data.pop('tags'))
         return recipe
 
     def update(self, instance, validated_data):
-        ingredients_data = validated_data.pop('ingredients')
         instance_recipe = super().update(instance, validated_data)
         RecipeIngredient.objects.filter(recipe=instance_recipe).delete()
-        self.create_ingredients(ingredients_data, instance)
+        self.create_ingredients(validated_data.pop('ingredients'), instance)
         return instance_recipe
 
 
@@ -269,7 +262,7 @@ class FavoriteSerializer(serializers.ModelSerializer):
             UniqueTogetherValidator(
                 queryset=Favorite.objects.all(),
                 fields=('user', 'recipe'),
-                message='Этот рецепт уже в избранном'
+                message='Уникальность избранности'
             )
         ]
 
