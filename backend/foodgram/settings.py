@@ -13,7 +13,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', default='secret_key')
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default=['*']).split(' ')  # noqa
 # ALLOWED_HOSTS = ('127.0.0.1', 'backend')
 # DEBUG = os.getenv('DEBUG', default=False)
-DEBUG = True
+DEBUG = False
 
 INSTALLED_APPS = [
     'django.contrib.admin',
