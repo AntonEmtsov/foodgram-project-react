@@ -1,80 +1,56 @@
 from django.contrib import admin
-from django.utils.html import format_html
 
 from .models import (Favorite, Ingredient, IngredientQuantity, Recipe,
-                     ShoppingCart, Tag, User)
+                     ShoppingCart, Tag)
 
 
-class BaseAdminSettings(admin.ModelAdmin):
+class IngredientRecipeInline(admin.TabularInline):
+    model = IngredientQuantity
+
+
+@admin.register(Ingredient)
+class IngredientAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'measurement_unit')
+    search_fields = ('name',)
+    list_filter = ('measurement_unit',)
+    inlines = (IngredientRecipeInline,)
     empty_value_display = '-пусто-'
 
 
-class IngredientAdmin(BaseAdminSettings):
-    list_display = (
-        'name',
-        'measurement_unit'
-    )
-    list_display_links = ('name',)
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'slug', 'color')
     search_fields = ('name',)
     list_filter = ('name',)
-    empty_value_display = '-0-'
-
-
-class IngredientQuantityInLine(admin.TabularInline):
-    model = IngredientQuantity
-    extra = 0
-    min_num = 1
-
-
-class TagAdmin(BaseAdminSettings):
-    list_display = (
-        'name',
-        'colored',
-        'slug'
-    )
-    list_display_links = ('name', 'colored', 'slug',)
-    search_fields = ('name', 'slug')
-    list_filter = ('name',)
     empty_value_display = '-пусто-'
 
-    @admin.display
-    def colored(self, obj):
-        return format_html(
-            f'<span style="background: {obj.color};'
-            f'color: {obj.color}";>___________</span>'
-        )
-    colored.short_description = 'цвет'
 
-
-class RecipeAdmin(BaseAdminSettings):
+@admin.register(Recipe)
+class RecipeAdmin(admin.ModelAdmin):
     list_display = (
-        'name', 'author', 'text',
-        'cooking_time', 'id', 'image',
+        'id', 'author', 'name', 'image', 'text',
+        'cooking_time', 'pub_date', 'favorited',
     )
-    list_display_links = ('name',)
-    search_fields = ('name', 'author', 'tags')
-    list_filter = ('author', 'name', 'tags')
-    filter_horizontal = ('tags',)
-    inlines = (IngredientQuantityInLine,)
-    exclude = ('ingredients', )
-    empty_value_display = '-0-'
+    search_fields = ('author', 'name', 'tags')
+    list_filter = ('tags',)
+    inlines = (IngredientRecipeInline,)
+    empty_value_display = '-пусто-'
+
+    def favorited(self, obj):
+        return Favorite.objects.filter(recipe=obj).count()
 
 
-class FavoriteAdmin(admin.ModelAdmin):
-    list_display = ('user', 'recipe')
-    list_filter = ('user', 'recipe')
-    search_fields = ('user', 'recipe')
-
-
-class ShoppingCartAdmin(admin.ModelAdmin):
-    list_display = ('recipe', 'user')
-    list_filter = ('recipe', 'user')
+@admin.register(Favorite)
+class UserFavoriteRecipesAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'recipe')
     search_fields = ('user',)
+    list_filter = ('user',)
+    empty_value_display = '-пусто-'
 
 
-admin.site.register(User, BaseAdminSettings)
-admin.site.register(Ingredient, IngredientAdmin)
-admin.site.register(Tag, TagAdmin)
-admin.site.register(Recipe, RecipeAdmin)
-admin.site.register(Favorite, FavoriteAdmin)
-admin.site.register(ShoppingCart, ShoppingCartAdmin)
+@admin.register(ShoppingCart)
+class ShoppingListAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'recipe')
+    search_fields = ('user',)
+    list_filter = ('user',)
+    empty_value_display = '-пусто-'

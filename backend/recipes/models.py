@@ -118,6 +118,10 @@ class Recipe(models.Model):
         Tag,
         verbose_name='Теги',
     )
+    pub_date = models.DateTimeField(
+        verbose_name='Дата публикации',
+        auto_now_add=True,
+    )
 
     class Meta:
         ordering = ('name', )
