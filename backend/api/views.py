@@ -167,7 +167,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             name, measurement_unit, amount = ingredients
             text += f'{name}: {amount} {measurement_unit}\n'
         response = HttpResponse(text, content_type='text/plain')
-        filename = 'shop-list.pdf'
+        filename = 'shoping_list.pdf'
         response['Content-Disposition'] = (
             f'attachment; filename={filename}'
         )

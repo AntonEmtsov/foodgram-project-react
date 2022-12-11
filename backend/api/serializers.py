@@ -16,12 +16,8 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'email',
-            'id',
-            'first_name',
-            'last_name',
-            'username',
-            'is_subscribed'
+            'email', 'id', 'first_name',
+            'last_name', 'username', 'is_subscribed'
         )
 
     def get_is_subscribed(self, obj: User):
@@ -111,10 +107,7 @@ class IngredientQuantityShowSerializer(serializers.ModelSerializer):
     class Meta:
         model = IngredientQuantity
         fields = (
-            'id',
-            'name',
-            'measurement_unit',
-            'amount',
+            'id', 'name', 'measurement_unit', 'amount',
         )
 
 
