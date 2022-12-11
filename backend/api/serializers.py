@@ -3,6 +3,7 @@ from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
+from .filters import RecipeFilter
 from recipes.models import (Favorite, Ingredient, Purchase, Recipe,
                             RecipeIngredient, Tag)
 from users.models import Subscribe, User
@@ -45,6 +46,7 @@ class CustomUserSerializer(UserSerializer):
 class SubscriptionsSerializer(CustomUserSerializer):
     recipes = serializers.SerializerMethodField()
     recipes_count = serializers.SerializerMethodField()
+    filter_class = RecipeFilter
 
     class Meta:
         model = User
@@ -67,6 +69,7 @@ class SubscribeSerializer(serializers.ModelSerializer):
     following = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all()
     )
+    filter_class = RecipeFilter
 
     class Meta:
         model = Subscribe
