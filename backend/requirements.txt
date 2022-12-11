@@ -56,5 +56,4 @@ tomli==2.0.1
 tzdata==2022.6
 uritemplate==4.1.1
 urllib3==1.26.13
-drf_base64==2.0
-reportlab==3.6.12
+sorl-thumbnail==12.9.0
