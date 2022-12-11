@@ -97,6 +97,11 @@ class RecipeViewSet(ModelViewSet):
             return RecipeReadSerializer
         return RecipeSerializer
 
+    def get_queryset(self):
+        queryset = Recipe.objects.all()
+        if self.request.GET.get("is_favorited"):
+            queryset = queryset.filter(favorite=self.request.user)
+
     @action(
         detail=True,
         methods=['POST'],
