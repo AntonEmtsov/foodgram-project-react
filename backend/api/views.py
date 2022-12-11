@@ -101,6 +101,7 @@ class RecipeViewSet(ModelViewSet):
         queryset = Recipe.objects.all()
         if self.request.GET.get("is_favorited"):
             queryset = queryset.filter(favorite=self.request.user)
+        return queryset
 
     @action(
         detail=True,
