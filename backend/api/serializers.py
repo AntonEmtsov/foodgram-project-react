@@ -187,7 +187,15 @@ class CreateUpdateRecipeSerializer(serializers.ModelSerializer):
         ])
 
     def validate(self, data):
-        ingredients = data
+        ingredients = data['ingredients']
+        ingredients_list = []
+        for ingredient in ingredients:
+            ingredient_id = ingredient['ingredient'].id
+            if ingredient_id in ingredients_list:
+                raise ValidationError(
+                    'Нельзя добавлять один и тот же ингредиент дважды.'
+                )
+            ingredients_list.append(ingredient_id)
         if not ingredients:
             raise serializers.ValidationError(
                 'Нужно выбрать хотябы 1 ингредиент!'
