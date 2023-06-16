@@ -31,16 +31,12 @@ scp ./docker-compose.yml russ044@158.160.38.190:/home/russ044/
 scp ./nginx.conf russ044@158.160.38.190:/home/russ044/nginx.conf
 ```
 В репозитории на GitHub необходимо прописать Secrets. Переменые прописаны в yamdb_workflow.yaml.
-Выполнить push в ветку main. Приложение само пройдет тесты, обновит образ на DockerHub и выполнит деплой на боевой сервер
-Подлючаемся к серверу, переходим в контейнер "web", делаем миграции и собираем статику:
+Выполнить push в ветку main. Приложение само пройдет тесты, обновит образ на DockerHub и выполнит деплой на сервер
+
+Создание суперюзера:
 ```
 ssh user@host
 docker container exec -it <CONTAINER ID> bash
-python manage.py migrate
-python manage.py collectstatic --no-input
-```
-Создание суперюзера:
-```
 python manage.py createsuperuser
 ```
 ### Документация API
