@@ -1,5 +1,9 @@
-# Foodgram - Продуктовый помощник
 ![foodgram_project_react_workflow](https://github.com/russ044/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)
+# Foodgram - Продуктовый помощник
+
+![Снимок экрана 2023-07-10 082838](https://github.com/AntonEmtsov/foodgram-project-react/assets/93160961/cac90902-925e-4bc0-84f6-10f2aef00478)
+![Снимок экрана 2023-07-10 082921](https://github.com/AntonEmtsov/foodgram-project-react/assets/93160961/a8ed9e25-cb33-4c14-be4c-53746250ed5c)
+![Снимок экрана 2023-07-10 083206](https://github.com/AntonEmtsov/foodgram-project-react/assets/93160961/d0947b23-6481-4dbb-abae-696095c6dd4c)
 
 ### Тенологии используемые в проекте:
 - python 3.8
@@ -31,7 +35,7 @@ scp ./docker-compose.yml user@host:/home/user/
 scp ./nginx.conf user@host:/home/user/nginx.conf
 ```
 В репозитории на GitHub необходимо прописать Secrets. Переменые прописаны в yamdb_workflow.yaml.
-Выполнить push в ветку main. Приложение само пройдет тесты, обновит образ на DockerHub и выполнит деплой на сервер
+Выполнить push в ветку main.
 
 Создание суперюзера:
 ```
