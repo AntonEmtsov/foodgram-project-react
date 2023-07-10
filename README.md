@@ -34,7 +34,31 @@ sudo apt-get install docker-compose-plugin
 scp ./docker-compose.yml user@host:/home/user/
 scp ./nginx.conf user@host:/home/user/nginx.conf
 ```
-В репозитории на GitHub необходимо прописать Secrets. Переменые прописаны в yamdb_workflow.yaml.
+В репозитории на GitHub необходимо прописать Secrets: 
+```
+Для подключения к удаленному серверу:
+HOST=127.0.0.1
+USER=admin
+SSH_KEY=ssh 
+PASSPHRASE=passphrase
+
+# База Данных PostgreSQL:
+DB_ENGINE=django.db.backends.postgresql_psycopg2
+DB_NAME=foodgram_db
+DB_HOST=localhost
+DB_PORT=5432
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=admin
+
+# Настройки Django:
+SECRET_KEY=secret_key
+DEBUG=True
+ALLOWED_HOSTS=127.0.0.1
+
+# Для обновления и скачивания образов с Docker Hub:
+DOCKER_USERNAME=user
+DOCKER_PASSWORD=pass
+```
 Выполнить push в ветку main.
 
 Создание суперюзера:
@@ -44,7 +68,7 @@ docker container exec -it <CONTAINER ID> bash
 python manage.py createsuperuser
 ```
 ### Документация API
-Документация доступна по этому [адресу](http://127.0.0.1/redoc).
+Документация доступна по этому [адресу](https://github.com/AntonEmtsov/foodgram-project-react/blob/master/docs/openapi-schema.yml).
 
 ### Автор проекта:
 - Емцов А.В.  [russ044](https://github.com/russ044)
