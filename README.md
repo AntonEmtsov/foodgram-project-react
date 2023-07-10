@@ -5,7 +5,7 @@
 ![Снимок экрана 2023-07-10 082921](https://github.com/AntonEmtsov/foodgram-project-react/assets/93160961/a8ed9e25-cb33-4c14-be4c-53746250ed5c)
 ![Снимок экрана 2023-07-10 083206](https://github.com/AntonEmtsov/foodgram-project-react/assets/93160961/d0947b23-6481-4dbb-abae-696095c6dd4c)
 
-### Тенологии используемые в проекте:
+### Технологии используемые в проекте:
 - python 3.8
 - django 4.1.3
 - django-colorfield 0.8.0
