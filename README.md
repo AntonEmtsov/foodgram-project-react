@@ -41,8 +41,8 @@ scp ./docker-compose.yml user@host:/home/user/
 scp ./nginx.conf user@host:/home/user/nginx.conf
 ```
 В репозитории на GitHub необходимо прописать Secrets: 
-```
-Для подключения к удаленному серверу:
+```dotenv
+# Для подключения к удаленному серверу:
 HOST=127.0.0.1
 USER=admin
 SSH_KEY=ssh 
