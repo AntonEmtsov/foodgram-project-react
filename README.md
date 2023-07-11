@@ -6,15 +6,15 @@
 ![Снимок экрана 2023-07-10 083206](https://github.com/AntonEmtsov/foodgram-project-react/assets/93160961/d0947b23-6481-4dbb-abae-696095c6dd4c)
 
 ### Технологии используемые в проекте:
-- python 3.8
-- django 4.1.3
-- django-colorfield 0.8.0
-- django-filter 22.1
-- djangorestframework 3.14.0
-- djangorestframework-simplejwt 4.8.0
-- djoser 2.1.0
-- Docker 20.10.20
-- psycopg2-binary 2.9.5
+- Python 3.11
+- Django 4.2.3
+- Django Colorfield 0.9.0
+- Django Filter 23.2
+- Django REST Framework 3.14.0
+- Django REST Framework SimpleJWT 5.2.2
+- Djoser 2.2.0
+- Docker
+- Psycopg2-binary 2.9.6
 
 ### Как запустить проект:
 Клонировать репозиторий и перейдти в него в командной строке с помощью команд:
