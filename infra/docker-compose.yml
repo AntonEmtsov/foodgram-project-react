@@ -1,5 +1,6 @@
 version: '3.8'
 services:
+
   db:
     image: postgres:13.0-alpine
     restart: always
@@ -14,6 +15,7 @@ services:
       - ../frontend/:/app/result_build/
 
   backend:
+    # build: ../backend/
     image: russ044/foodgram-backend:latest
     restart: always
     command: >

@@ -8,12 +8,28 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', default='secret_key')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default='*').split()
 
+DEBUG = os.getenv('DEBUG') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default=['*']).split(' ')  # noqa
-# ALLOWED_HOSTS = ('127.0.0.1', 'backend')
-# DEBUG = os.getenv('DEBUG', default=False)
-DEBUG = False
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': os.getenv('DB_ENGINE', default="django.db.backends.postgresql_psycopg2"),  # noqa
+            'NAME': os.getenv('DB_NAME', default="foodgram_db"),
+            'USER': os.getenv('POSTGRES_USER', default="postgres"),
+            'PASSWORD': os.getenv('POSTGRES_PASSWORD', default="admin"),
+            'HOST': os.getenv('DB_HOST', default="localhost"),
+            'PORT': os.getenv('DB_PORT', default="5432")
+        }
+    }
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -66,38 +82,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'foodgram.wsgi.application'
-
-DATABASES = {
-    'default': {
-        'ENGINE': os.getenv('DB_ENGINE', default="django.db.backends.postgresql_psycopg2"),  # noqa
-        'NAME': os.getenv('DB_NAME', default="foodgram_db"),
-        'USER': os.getenv('POSTGRES_USER', default="postgres"),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', default="admin"),
-        'HOST': os.getenv('DB_HOST', default="localhost"),
-        'PORT': os.getenv('DB_PORT', default="5432")
-    }
-}
-
-'''
-if DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': os.getenv('DB_ENGINE', default="django.db.backends.postgresql_psycopg2"),  # noqa
-            'NAME': os.getenv('DB_NAME', default="foodgram_db"),
-            'USER': os.getenv('POSTGRES_USER', default="postgres"),
-            'PASSWORD': os.getenv('POSTGRES_PASSWORD', default="admin"),
-            'HOST': os.getenv('DB_HOST', default="localhost"),
-            'PORT': os.getenv('DB_PORT', default="5432")
-        }
-    }
-'''
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -152,6 +136,7 @@ DJOSER = {
     },
 }
 
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_MAX_LENGTH = 254
 FIRST_NAME_MAX_LENGTH = 150
