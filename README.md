@@ -1,6 +1,12 @@
 ![foodgram_project_react_workflow](https://github.com/russ044/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)
-# Foodgram - Продуктовый помощник
 
+# Foodgram - Продуктовый помощник
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![Django](https://img.shields.io/badge/django-%23092E20.svg?style=for-the-badge&logo=django&logoColor=white)
+![DjangoREST](https://img.shields.io/badge/DJANGO-REST-ff1709?style=for-the-badge&logo=django&logoColor=white&color=ff1709&labelColor=gray)
+![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+![Nginx](https://img.shields.io/badge/nginx-%23009639.svg?style=for-the-badge&logo=nginx&logoColor=white)
 ![Снимок экрана 2023-07-10 082838](https://github.com/AntonEmtsov/foodgram-project-react/assets/93160961/cac90902-925e-4bc0-84f6-10f2aef00478)
 ![Снимок экрана 2023-07-10 082921](https://github.com/AntonEmtsov/foodgram-project-react/assets/93160961/a8ed9e25-cb33-4c14-be4c-53746250ed5c)
 ![Снимок экрана 2023-07-10 083206](https://github.com/AntonEmtsov/foodgram-project-react/assets/93160961/d0947b23-6481-4dbb-abae-696095c6dd4c)
