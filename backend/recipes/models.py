@@ -11,6 +11,10 @@ MESSAGE_RECIPE_COOKING_TIME_MIN_LENGTH = 'Минимальное значени�
 MESSAGE_INGREDIENT_IN_RECIPE_MIN_LENGTH = 'Выберете хотя бы 1 ингредиент.'
 
 
+def image_recipe_upload_user_folder(instance, filename):
+    return 'recipes/recipe_images/user_id_{0}/{1}'.format(instance.author.id, filename)
+
+
 class Ingredient(models.Model):
     name = models.CharField(
         max_length=settings.INGREDIENT_NAME_MAX_LENGTH,
@@ -58,11 +62,11 @@ class IngredientQuantity(models.Model):
         constraints = (
             models.UniqueConstraint(
                 fields=('current_recipe', 'ingredient',),
-                name='Единственность ингредиента в рецепте'
+                name='Единственность ингредиента в рецепте',
             ),
             models.CheckConstraint(
                 check=models.Q(amount__gte=1),
-                name='amount_gte_1'
+                name='amount_gte_1',
             ),
         )
 
@@ -77,7 +81,7 @@ class Tag(models.Model):
     )
     slug = models.SlugField(
         verbose_name='Ссылка',
-        unique=True
+        unique=True,
     )
     color = ColorField(
         unique=True,
@@ -109,7 +113,7 @@ class Recipe(models.Model):
     )
     image = models.ImageField(
         verbose_name='Картинка',
-        upload_to='recipes/media/',
+        upload_to=image_recipe_upload_user_folder,
     )
     cooking_time = models.PositiveSmallIntegerField(
         verbose_name='Время приготовления',
@@ -190,7 +194,7 @@ class ShoppingCart(models.Model):
         Recipe,
         verbose_name='Рецепт',
         on_delete=models.CASCADE,
-        related_name='cart_recipe'
+        related_name='cart_recipe',
     )
 
     class Meta:
@@ -198,7 +202,8 @@ class ShoppingCart(models.Model):
         verbose_name_plural = 'Списки покупок'
         constraints = [
             models.UniqueConstraint(
-                fields=['user', 'recipe'], name='Уникальность списка покупок'
+                fields=['user', 'recipe'],
+                name='Уникальность списка покупок',
             )
         ]
 
