@@ -73,10 +73,12 @@ DOCKER_PASSWORD=pass
 ```
 Выполнить push в ветку main.
 
-Создание суперюзера:
+Миграции, Статика, Создание суперюзера:
 ```
 ssh user@host
 docker container exec -it <CONTAINER ID> bash
+python manage.py migrate
+python manage.py collectstatic --noinput
 python manage.py createsuperuser
 ```
 ### Документация API
