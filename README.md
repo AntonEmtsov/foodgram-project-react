@@ -85,4 +85,4 @@ python manage.py createsuperuser
 Документация доступна по этому [адресу](https://github.com/AntonEmtsov/foodgram-project-react/blob/master/docs/openapi-schema.yml).
 
 ### Автор проекта:
-- Емцов А.В.  [russ044](https://github.com/russ044)
+- [Емцов Антон](https://github.com/AntonEmtsov)
