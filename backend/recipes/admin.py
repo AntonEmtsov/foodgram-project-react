@@ -9,7 +9,7 @@ from .models import (Favorite, Ingredient, IngredientQuantity, Recipe,
 class IngredientAdmin(admin.ModelAdmin):
     list_display = (
         'name',
-        'measurement_unit'
+        'measurement_unit',
     )
     list_display_links = ('name',)
     search_fields = ('name',)
@@ -28,7 +28,7 @@ class TagAdmin(admin.ModelAdmin):
     list_display = (
         'name',
         'colored',
-        'slug'
+        'slug',
     )
     list_display_links = ('name', 'colored', 'slug',)
     search_fields = ('name', 'slug')
